@@ -1,0 +1,295 @@
+<div id="quot-equipmnt" [formGroup]="form">
+
+    <!-- <div class="form-group col-md-4" formGroupName="quot-equipmnt">
+        <label>Eqp</label> -->
+    <!-- <input matInput placeholder="QuoteRef" formControlName="q" /> -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3" formGroupName="quot-equipmnt">
+                <label>Container Type</label>
+                <select id="CtrType" style="width: 100%;" name="CtrType" class="form-control" formControlName="CtrType">
+                    <option [ngValue]="0" disabled>Select Container Type</option>
+                    <option *ngFor="let sector of results" value="{{sector.id}}">
+                        {{sector.nickname}}</option>
+                </select>
+            </div>
+            <!-- </div> -->
+            <div class="form-group col-md-3" formGroupName="quot-equipmnt">
+                <label>No Of Box</label>
+                <input placeholder="" formControlName="NBox" />
+            </div>
+            <div class="form-group col-md-3" formGroupName="quot-equipmnt">
+                <label>Weight Per Box</label>
+                <input placeholder="" formControlName="WBox" />
+            </div>
+            <div class="form-group col-md-3" formGroupName="quot-equipmnt">
+                <label>Unit</label>
+                <select id="Unit" style="width: 100%;" name="Unit" class="form-control" formControlName="Unit">
+                    <option [ngValue]="0" disabled>Select Unit</option>
+                    <option *ngFor="let sector of resultsunit" value="{{sector.id}}">
+                        {{sector.code}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3" formGroupName="quot-equipmnt">
+                <label>Frequency Per Week</label>
+                <input placeholder="" formControlName="Freq" (keyup)="GetAllInElements()" />
+            </div>
+            <div class="form-group col-md-3" formGroupName="quot-equipmnt">
+                <label>Quoted Rates Per ontainer</label>
+                <input placeholder="" formControlName="QuoteRate" />
+            </div>
+            <div class="form-group col-md-6" formGroupName="quot-equipmnt">
+                <!-- <mat-chip-list #chipList formArrayName="emails">
+                    <mat-chip *ngFor="let item of emailList; let i=index" [selectable]="true" [removable]="removable"
+                        (removed)="removeEmail(item)" required name="chips">{{item}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="enter item " [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes " [matChipInputAddOnBlur]="true "
+                        (matChipInputTokenEnd)="add($event) " />
+                </mat-chip-list> -->
+                <!-- <mat-chip-list #chipList formArrayName="emails">
+                    <mat-chip *ngFor="let fruit of resultsunit" [selectable]="true" [removable]="removable">
+                        {{fruit.code}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                </mat-chip-list> -->
+
+                <mat-select [formControl]="toppingsControl" multiple style="width: 100%;">
+                    <mat-select-trigger>
+                        <mat-chip-list>
+                            <mat-chip *ngFor="let topping of toppingsControl.value" [removable]="true"
+                                (removed)="onToppingRemoved(topping)">
+                                {{ topping }}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                        </mat-chip-list>
+                    </mat-select-trigger>
+
+                    <mat-option *ngFor="let topping of resultallele"
+                        [value]="topping.elementCode">{{topping.elementCode}}</mat-option>
+
+                </mat-select>
+
+            </div>
+            <div class="form-group col-md-6" formGroupName="quot-equipmnt">
+                <button type="button" (click)="GetFreight()">Get Freight</button>
+            </div>
+            <div class="form-group col-md-6" formGroupName="quot-equipmnt">
+                <!-- <ng-container *ngFor="let bof of resultbof">
+                    {{ bof.elementCode }} - {{ bof.currencyCode }}<br />
+                </ng-container> -->
+                <table style="border-style: inset;caption-side: top;width: 100%;">
+                    <caption>BOF AND SURCHARGES</caption>
+                    <thead>
+                        <th class="form-group col-md-3">Sl No</th>
+                        <th class="form-group col-md-3">Element</th>
+                        <th class="form-group col-md-3">Currency</th>
+                        <th class="form-group col-md-3">Tarrif</th>
+                        <th class="form-group col-md-3">Quoted Rate</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let bof of resultbof; let i=index;let l=last">
+                            <td>{{i+1}}</td>
+                            <td>
+                                {{bof.elementCode}}
+                            </td>
+                            <td>
+                                {{bof.currencyCode}}
+                            </td>
+                            <td>
+                                {{bof.rate}}
+                            </td>
+                            <td>
+                                <input class="form-control" value="{{bof.rate}}" formControlName="te"
+                                    [(ngModel)]="bof.qtrate" type="number">
+                            </td>
+                            <!-- <td>
+                                <button *ngIf="invoiceForm.controls.Rows.controls.length > 1" (click)="deleteRow(i)"
+                                    class="btn btn-danger">Delete</button>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="form-group col-md-6" formGroupName="quot-equipmnt">
+                <!-- <ng-container *ngFor="let bof of resultbof">
+                    {{ bof.elementCode }} - {{ bof.currencyCode }}<br />
+                </ng-container> -->
+                <table style="border-style: inset;caption-side: top;width: 100%;">
+                    <caption>POL CHARGES</caption>
+                    <thead>
+                        <th class="form-group col-md-3">Sl No</th>
+                        <th class="form-group col-md-3">Element</th>
+                        <th class="form-group col-md-3">Currency</th>
+                        <th class="form-group col-md-3">Rate</th>
+
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let polchrg of resultportchrg; let i=index;let l=last">
+                            <td>{{i+1}}</td>
+                            <td>
+                                {{polchrg.elementCode}}
+                            </td>
+                            <td>
+                                {{polchrg.currencyCode}}
+                            </td>
+                            <td>
+                                {{polchrg.rate}}
+                            </td>
+
+                            <!-- <td>
+                                <button *ngIf="invoiceForm.controls.Rows.controls.length > 1" (click)="deleteRow(i)"
+                                    class="btn btn-danger">Delete</button>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="form-group col-md-6" formGroupName="quot-equipmnt">
+                <!-- <ng-container *ngFor="let bof of resultbof">
+                                {{ bof.elementCode }} - {{ bof.currencyCode }}<br />
+                            </ng-container> -->
+                <table style="border-style: inset;caption-side: top;width: 100%;">
+                    <caption>POD CHARGES</caption>
+                    <thead>
+                        <th class="form-group col-md-3">Sl No</th>
+                        <th class="form-group col-md-3">Element</th>
+                        <th class="form-group col-md-3">Currency</th>
+                        <th class="form-group col-md-3">Rate</th>
+
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let podchrg of resultpodchrg; let i=index;let l=last">
+                            <td>{{i+1}}</td>
+                            <td>
+                                {{podchrg.elementCode}}
+                            </td>
+                            <td>
+                                {{podchrg.currencyCode}}
+                            </td>
+                            <td>
+                                {{podchrg.rate}}
+                            </td>
+
+                            <!-- <td>
+                                            <button *ngIf="invoiceForm.controls.Rows.controls.length > 1" (click)="deleteRow(i)"
+                                                class="btn btn-danger">Delete</button>
+                                        </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="form-group col-md-6" formGroupName="quot-equipmnt">
+                <table style="border-style: inset;caption-side: top;width: 100%;">
+                    <caption>OTHER CHARGES-POL</caption>
+                    <thead>
+                        <th class="form-group col-md-3">Sl No</th>
+                        <th class="form-group col-md-3">Element</th>
+                        <th class="form-group col-md-3">Currency</th>
+                        <th class="form-group col-md-3">Rate</th>
+
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let podchrg of otherpolchrg; let i=index;let l=last">
+                            <td class="form-group col-md-4">{{i+1}}</td>
+                            <td class="form-group col-md-4">
+                                {{podchrg.elementCode}}
+                            </td>
+                            <td class="form-group col-md-4">
+                                {{podchrg.currencyCode}}
+                            </td>
+                            <td>
+                                <table style="border-style: inset;caption-side: top;width: 100%;">
+                                    <thead>
+                                        <th class="form-group col-md-4">From</th>
+                                        <th class="form-group col-md-4">To</th>
+                                        <th class="form-group col-md-4">Rate</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let slab of podchrg.slabs; let i=index;let l=last">
+                                            <td class="form-group col-md-4">
+                                                {{slab.fromSlab}}
+                                            </td>
+                                            <td class="form-group col-md-4">
+                                                {{slab.toSlab}}
+                                            </td>
+                                            <td class="form-group col-md-4">
+                                                {{slab.rate}}
+                                            </td>
+                                        </tr>
+                                </table>
+                            </td>
+
+                            <!-- <td>
+                                            <button *ngIf="invoiceForm.controls.Rows.controls.length > 1" (click)="deleteRow(i)"
+                                                class="btn btn-danger">Delete</button>
+                                        </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="form-group col-md-6" formGroupName="quot-equipmnt">
+                <table style="border-style: inset;caption-side: top;width: 100%;">
+                    <caption>OTHER CHARGES-POD</caption>
+                    <thead>
+                        <th class="form-group col-md-3">Sl No</th>
+                        <th class="form-group col-md-3">Element</th>
+                        <th class="form-group col-md-3">Currency</th>
+                        <th class="form-group col-md-3">Rate</th>
+
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let podchrg of otherpodchrg; let i=index;let l=last">
+                            <td class="form-group col-md-4">{{i+1}}</td>
+                            <td class="form-group col-md-4">
+                                {{podchrg.elementCode}}
+                            </td>
+                            <td class="form-group col-md-4">
+                                {{podchrg.currencyCode}}
+                            </td>
+                            <td>
+                                <table style="border-style: inset;caption-side: top;width: 100%;">
+                                    <thead>
+                                        <th class="form-group col-md-4">From</th>
+                                        <th class="form-group col-md-4">To</th>
+                                        <th class="form-group col-md-4">Rate</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let slab of podchrg.slabs; let i=index;let l=last">
+                                            <td class="form-group col-md-4">
+                                                {{slab.fromSlab}}
+                                            </td>
+                                            <td class="form-group col-md-4">
+                                                {{slab.toSlab}}
+                                            </td>
+                                            <td class="form-group col-md-4">
+                                                {{slab.rate}}
+                                            </td>
+                                        </tr>
+                                </table>
+                            </td>
+
+                            <!-- <td>
+                                                        <button *ngIf="invoiceForm.controls.Rows.controls.length > 1" (click)="deleteRow(i)"
+                                                            class="btn btn-danger">Delete</button>
+                                                    </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<button type="button" matStepperNext (click)="step2Submitted()">Next</button>

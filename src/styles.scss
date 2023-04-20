@@ -1,0 +1,7 @@
+/* Importing Bootstrap SCSS file. */
+.cdk-overlay-container {
+    position: fixed;
+    z-index: 1500;
+}
+
+@import '~bootstrap/scss/bootstrap.scss'

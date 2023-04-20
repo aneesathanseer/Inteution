@@ -1,0 +1,249 @@
+<div class="container" id="quot-basic" [formGroup]="form">
+
+  <div class="row">
+
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>QuoteRef</label>
+      <input placeholder="QuoteRef" formControlName="QuoteRef" />
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Line</label>
+      <!-- <input matInput placeholder="Line" formControlName="Line"  /> -->
+      <mat-form-field>
+        <input matInput placeholder="Search Tags" [(ngModel)]="selectedTag" [matAutocomplete]="auto"
+          [formControl]="searchTagCtrl" placeholder="Min 2 Characters">
+        <button *ngIf="selectedTag" matSuffix mat-icon-button aria-label="Clear" (click)="clearTags()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-autocomplete [panelWidth]="500" #auto="matAutocomplete" (optionSelected)="onSelected()"
+          [displayWith]="displayWith">
+          <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+          <ng-container *ngIf="!isLoading">
+            <mat-option *ngFor="let tag of filteredTags" [value]="tag">
+              <span>{{tag.name}}</span>
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+      </mat-form-field>
+      <br><br>
+      <!-- <ng-container *ngIf="errorMsg; else elseTemplate">
+              {{errorMsg}}
+            </ng-container> -->
+      <!-- <ng-template #elseTemplate>
+                <div *ngIf="selectedTag?.name">
+                  <div>
+                    <h3>Selected Tag: {{selectedTag?.name}}</h3>
+                  </div>
+                </div>
+              </ng-template> -->
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>POL</label>
+      <!-- <input matInput placeholder="Line" formControlName="POL"  /> -->
+      <input [formControl]="searchBox" [matAutocomplete]="ac" id="searchBox" />
+      <mat-autocomplete #ac="matAutocomplete" (optionSelected)="itemSelected($event,'POL')">
+        <mat-option *ngFor="let option of searchResults; " [disabled]="option.disabled" [id]="option.id"
+          [value]="option.code">
+          {{ option.code }}
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>POD</label>
+      <input placeholder="Line" formControlName="POD" (click)="open(mymodal)" />
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Party</label>
+      <input [formControl]="searchParty" [matAutocomplete]="acc" id="searchParty" />
+      <mat-autocomplete #acc="matAutocomplete" (optionSelected)="itemSelected($event,'Party')">
+        <mat-option *ngFor="let option of searchResultport; " [disabled]="option.disabled" [id]="option.id"
+          [value]="option.partyName">
+          {{ option.partyName }}
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Valid From</label>
+      <!-- <input matInput placeholder="Line" formControlName="ValidFrom" /> -->
+
+      <div class="input-group">
+        <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker"
+          formControlName="ValidFrom" (dateSelect)="onSelect($event,'ValidFrom')" />
+        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"></button>
+        <!-- <pre>Model: {{ model | json }}</pre> -->
+      </div>
+
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Valid Till</label>
+      <!-- <input matInput placeholder="Line" formControlName="ValidTill" /> -->
+      <div class="input-group">
+        <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dd="ngbDatepicker"
+          formControlName="ValidTill" (dateSelect)="onSelect($event,'ValidTill')" />
+        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="dd.toggle()" type="button"></button>
+        <!-- <pre>Model: {{ model | json }}</pre> -->
+      </div>
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Currency</label>
+      <input placeholder="Currency" [matAutocomplete]="accur" [formControl]="Currency" id="Currency" />
+      <mat-autocomplete #accur="matAutocomplete" (optionSelected)="itemSelected($event,'Cur')">
+        <mat-option *ngFor="let option of searchResultport; " [disabled]="option.disabled" [id]="option.id"
+          [value]="option.code">
+          {{ option.code }}
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+    <div class="col-md-12" formGroupName="quotbasic">
+      <label>Transit Details</label>
+
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>POL</label>
+      <!-- <input matInput placeholder="Line" formControlName="TransitPOL" /> -->
+      <input placeholder="POL" [matAutocomplete]="acpol" formControlName="TransitPOL" (keyup)="test($event,'POL')"
+        minlength="2" />
+      <mat-autocomplete #acpol="matAutocomplete" (optionSelected)="itemSelected($event,'TransitPOL')">
+        <mat-option *ngFor="let option of searchTransitPOL; " [disabled]="option.disabled" [id]="option.id"
+          [value]="option.code">
+          {{ option.code }}
+        </mat-option>
+      </mat-autocomplete>
+      <input type="hidden" formControlName="TransitPOLID">
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>POD</label>
+      <!-- <input matInput placeholder="Line" formControlName="TransitPOD" /> -->
+      <input placeholder="POD" [matAutocomplete]="acpod" formControlName="TransitPOD" (keyup)="test($event,'POD')"
+        minlength="2" />
+      <mat-autocomplete #acpod="matAutocomplete" (optionSelected)="itemSelected($event,'TransitPOD')">
+        <mat-option *ngFor="let option of searchTransitPOD; " [disabled]="option.disabled" [id]="option.id"
+          [value]="option.code">
+          {{ option.code }}
+        </mat-option>
+      </mat-autocomplete>
+      <input type="hidden" formControlName="TransitPODID">
+      <input type="hidden" formControlName="QuotID">
+    </div>
+    <div class="col-md-12" formGroupName="quotbasic">
+      <label>Cargo Details</label>
+
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Cargo Type</label>
+      <!-- <input matInput placeholder="Line" formControlName="CargoType" /> -->
+      <select id="CargoType" style="width: 100%;" name="CargoType" class="form-control" formControlName="CargoType"
+        (change)="getSubType($event.target)">
+        <option [ngValue]="0" disabled>Select Cargo</option>
+        <option *ngFor="let sector of cargo" value="{{sector.id}}">
+          {{sector.name}}</option>
+      </select>
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Cargo Sub Type</label>
+      <!-- <input matInput placeholder="Line" formControlName="CargoType" /> -->
+      <select id="CargoSubType" style="width: 100%;" name="CargoSubType" class="form-control"
+        formControlName="CargoSubType">
+        <option [ngValue]="0" disabled>Select Sub Type</option>
+        <option *ngFor="let sector of cargosub" value="{{sector.id}}">
+          {{sector.name}}</option>
+      </select>
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>Stuffing</label>
+      <!-- <input matInput placeholder="Line" formControlName="Stuffing" /> -->
+      <select id="stuff" style="width: 100%;" name="stuff" class="form-control" formControlName="Stuffing">
+        <option [ngValue]="0" disabled>Select Stuff</option>
+        <option *ngFor="let stuff of stuffs" value="{{stuff.id}}">
+          {{stuff.name}}</option>
+      </select>
+    </div>
+    <div class="col-md-3" formGroupName="quotbasic">
+      <label>De Stuffing</label>
+      <!-- <input matInput placeholder="Line" formControlName="DeStuffing" /> -->
+      <select id="DeStuffing" style="width: 100%;" name="DeStuffing" class="form-control" formControlName="DeStuffing">
+        <option [ngValue]="0" disabled>Select Stuff</option>
+        <option *ngFor="let stuff of destuffs" value="{{stuff.id}}">
+          {{stuff.name}}</option>
+      </select>
+    </div>
+
+  </div>
+
+
+
+
+  <!-- <button class="btn btn-lg btn-outline-primary" (click)="open(mymodal)">Open My Modal</button> -->
+
+
+
+  <ng-template #mymodal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Agent Details</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3" formGroupName="quotbasic">
+            <label>Search With</label>
+            <select name="portType" ng-model="portTypeSelect" aria-describedby="idHelp" id="portType"
+              class="form-control">
+              <option value="">--Select--</option>
+              <option value="Port">Port</option>
+              <option value="ICD">ICD</option>
+            </select>
+          </div>
+          <div class="col-md-3" formGroupName="quotbasic">
+            <label>Port</label>
+            <input [formControl]="searchPort" [matAutocomplete]="acport" id="searchPort" />
+            <mat-autocomplete #acport="matAutocomplete" (optionSelected)="itemSelected($event,'Port')">
+              <mat-option *ngFor="let option of searchResultport; " [disabled]="option.disabled" [id]="option.id"
+                [value]="option.code">
+                {{ option.code }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <div class="col-md-2" formGroupName="quotbasic">
+            <button class="btn btn-outline-dark" style="width: 100px; margin-left: 100px;margin-top: 20px;"
+              (click)="getPODAgent()">
+              Search
+            </button>
+          </div>
+          <div class="col-md-12" formGroupName="quotbasic">
+
+            <li *ngFor="let pod of Student">
+              <!--<span> {{stuff.description}} {{stuff.methodType}} {{stuff.name}}</span>-->
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-3">
+                    {{pod.officeId}}
+                  </div>
+                  <div class="col-md-3">
+                    {{pod.officeCode}}
+                  </div>
+                  <div class="col-md-3">
+                    {{pod.officeName}}
+                  </div>
+                  <div class="col-md-3">
+                    <button class="btb btn-info" (click)="getdetail(pod);modal.close()" style="width: 150px;">
+                      Get Details
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </li>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+    </div>
+  </ng-template>
+
+  <button type="button" matStepperNext (click)="step1Submitted()">Next</button>

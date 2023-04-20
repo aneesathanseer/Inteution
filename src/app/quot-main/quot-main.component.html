@@ -1,0 +1,28 @@
+<div style="text-align: center;">
+    <h1>Quotation</h1>
+</div>
+<div class="container">
+    <div class="row">
+
+
+        <div id="CreateQuote" class="col-lg-10">
+            <form id="form" [formGroup]="createform">
+                <mat-horizontal-stepper #stepper>
+                    <mat-step formGroupName="quotbasic" [stepControl]="createform.get('quotbasic')!">
+
+                        <ng-template matStepLabel>Basic Information</ng-template>
+                        <app-quot-basic [form]="createform"></app-quot-basic>
+
+                    </mat-step>
+                    <mat-step formGroupName="quot-equipmnt" [stepControl]="createform.get('quot-equipmnt')!">
+                        <ng-template matStepLabel>Container Details</ng-template>
+                        <app-quot-equipmnt [form]="createform"></app-quot-equipmnt>
+                    </mat-step>
+
+                </mat-horizontal-stepper>
+            </form>
+        </div>
+
+
+    </div>
+</div>
